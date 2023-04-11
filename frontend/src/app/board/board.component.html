@@ -1,0 +1,280 @@
+<div class="conteiner-fluid" style="overflow-x: hidden;">
+    <div class="row mt-2 mb-5">
+        <!-- <div class="col-1"></div> -->
+        <div class="col-12">
+            <div class="row text-center" style="justify-content: center">
+                <div class="col-md-12 col-lg-4 ">
+                    <h2>TO-DO</h2>
+                    <div class="row" style="justify-content: center;">
+                        <!-- <div class="col-1"></div> -->
+                        <div class="col-11  scrollDiv TO_DO">
+                            <table *ngIf="toDoTasks.length > 0;" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>User</th>
+                                        <th>Control</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of toDoTasks">
+                                        <td>{{t.task_id}}</td>
+                                        <td *ngIf="!t.edit">{{t.title}}</td>
+                                        <td *ngIf="!t.edit">{{t.description}}</td>
+                                        <td *ngIf="!t.edit">{{t.username}}</td>
+                                        <td *ngIf="t.edit"><input type="text"
+                                                style="width:7ch; font-size: smaller; text-align: center;"
+                                                placeholder={{t.title}} [(ngModel)]="editTitle">
+                                        </td>
+                                        <td *ngIf="t.edit">
+                                            <textarea rows="2" cols="10" style="font-size: smaller; text-align: center;"
+                                                placeholder={{t.description}} [(ngModel)]="editDescription"></textarea>
+                                        </td>
+                                        <td *ngIf="t.edit">
+                                            <select style="width:7ch;" name="editUser" [(ngModel)]="editUser">
+                                                <option value="unassigned"><i>Unassigned</i></option>
+                                                <option *ngFor="let u of allUsers" value={{u.username}}><i>{{
+                                                        u.username }}</i></option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="!t.edit && !t.changeStatus" class="fa fa-edit"
+                                                (click)="setEdit(t)">&nbsp;&nbsp;</span>
+                                            <span style="color:red" *ngIf="!t.edit && !t.changeStatus"
+                                                class="fa fa-times" (click)="deleteTask(t._id)">&nbsp;&nbsp;</span>
+
+                                            <span style="color:yellow" *ngIf="!t.changeStatus && !t.edit"
+                                                class="fa fa-exchange" (click)="setChangeStatus(t)"></span>
+                                            <select style="width:7ch;" *ngIf="t.changeStatus" name="editStatus"
+                                                [(ngModel)]="editStatus">
+                                                <option value="to-do"><i>TO-DO</i></option>
+                                                <option value="in_progress"><i>IN PROGRESS</i></option>
+                                                <option value="done"><i>DONE</i></option>
+                                            </select>
+                                            <span style="color:green" *ngIf="t.changeStatus" class="fa fa-exchange"
+                                                (click)="saveStatus(t)"></span>
+
+
+                                            <span style="color:green" *ngIf="t.edit" class="fa fa-check"
+                                                (click)="saveEdit(t)">&nbsp;&nbsp;</span>
+                                            <span style="color:red" *ngIf="t.edit" class="fa fa-level-up"
+                                                (click)="setEdit(t)"></span>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p *ngIf="toDoTasks.length == 0;">No tasks available</p>
+                        </div>
+                        <!-- <div class="col-1"></div> -->
+                    </div>
+
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <h2>IN PROGRESS</h2>
+                    <div class="row" style="justify-content: center;">
+                        <!-- <div class="col-1"></div> -->
+                        <div class="col-11  scrollDiv IN_PROGRESS">
+                            <table *ngIf="inProgressTasks.length > 0;" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>User</th>
+                                        <th>Control</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of inProgressTasks">
+                                        <td>{{t.task_id}}</td>
+                                        <td *ngIf="!t.edit">{{t.title}}</td>
+                                        <td *ngIf="!t.edit">{{t.description}}</td>
+                                        <td *ngIf="!t.edit">{{t.username}}</td>
+                                        <td *ngIf="t.edit"><input type="text"
+                                                style="width:7ch; font-size: smaller; text-align: center;"
+                                                placeholder={{t.title}} [(ngModel)]="editTitle">
+                                        </td>
+                                        <td *ngIf="t.edit">
+                                            <textarea rows="2" cols="10" style="font-size: smaller; text-align: center;"
+                                                placeholder={{t.description}} [(ngModel)]="editDescription"></textarea>
+                                        </td>
+                                        <td *ngIf="t.edit">
+                                            <select style="width:7ch;" name="editUser" [(ngModel)]="editUser">
+                                                <option value="unassigned"><i>Unassigned</i></option>
+                                                <option *ngFor="let u of allUsers" value={{u.username}}><i>{{
+                                                        u.username }}</i></option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="!t.edit && !t.changeStatus" class="fa fa-edit"
+                                                (click)="setEdit(t)">&nbsp;&nbsp;</span>
+                                            <span style="color:red" *ngIf="!t.edit && !t.changeStatus"
+                                                class="fa fa-times" (click)="deleteTask(t._id)">&nbsp;&nbsp;</span>
+
+                                            <span style="color:yellow" *ngIf="!t.changeStatus && !t.edit"
+                                                class="fa fa-exchange" (click)="setChangeStatus(t)"></span>
+                                            <select style="width:7ch;" *ngIf="t.changeStatus" name="editStatus"
+                                                [(ngModel)]="editStatus">
+                                                <option value="in_progress"><i>IN PROGRESS</i></option>
+                                                <option value="to-do"><i>TO-DO</i></option>
+                                                <option value="done"><i>DONE</i></option>
+                                            </select>
+                                            <span style="color:green" *ngIf="t.changeStatus" class="fa fa-exchange"
+                                                (click)="saveStatus(t)"></span>
+
+
+                                            <span style="color:green" *ngIf="t.edit" class="fa fa-check"
+                                                (click)="saveEdit(t)">&nbsp;&nbsp;</span>
+                                            <span style="color:red" *ngIf="t.edit" class="fa fa-level-up"
+                                                (click)="setEdit(t)"></span>
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <p *ngIf="inProgressTasks.length == 0;">No tasks available</p>
+                        </div>
+                        <!-- <div class="col-1"></div> -->
+                    </div>
+
+
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <h2>DONE</h2>
+                    <div class="row" style="justify-content: center;">
+                        <!-- <div class="col-1"></div> -->
+                        <div class="col-11 scrollDiv DONE">
+                            <table *ngIf="doneTasks.length > 0;" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>User</th>
+                                        <th>Control</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of doneTasks">
+                                        <td>{{t.task_id}}</td>
+                                        <td *ngIf="!t.edit">{{t.title}}</td>
+                                        <td *ngIf="!t.edit">{{t.description}}</td>
+                                        <td *ngIf="!t.edit">{{t.username}}</td>
+                                        <td *ngIf="t.edit"><input type="text"
+                                                style="width:7ch; font-size: smaller; text-align: center;"
+                                                placeholder={{t.title}} [(ngModel)]="editTitle">
+                                        </td>
+                                        <td *ngIf="t.edit">
+                                            <textarea rows="2" cols="10" style="font-size: smaller; text-align: center;"
+                                                placeholder={{t.description}} [(ngModel)]="editDescription"></textarea>
+                                        </td>
+                                        <td *ngIf="t.edit">
+                                            <select style="width:7ch;" name="editUser" [(ngModel)]="editUser">
+                                                <option value="unassigned"><i>Unassigned</i></option>
+                                                <option *ngFor="let u of allUsers" value={{u.username}}><i>{{
+                                                        u.username }}</i></option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="!t.edit && !t.changeStatus" class="fa fa-edit"
+                                                (click)="setEdit(t)">&nbsp;&nbsp;</span>
+                                            <span style="color:red" *ngIf="!t.edit && !t.changeStatus"
+                                                class="fa fa-times" (click)="deleteTask(t._id)">&nbsp;&nbsp;</span>
+
+                                            <span style="color:yellow" *ngIf="!t.changeStatus && !t.edit"
+                                                class="fa fa-exchange" (click)="setChangeStatus(t)"></span>
+                                            <select style="width:7ch;" *ngIf="t.changeStatus" name="editStatus"
+                                                [(ngModel)]="editStatus">
+                                                <option value="done"><i>DONE</i></option>
+                                                <option value="to-do"><i>TO-DO</i></option>
+                                                <option value="in_progress"><i>IN PROGRESS</i></option>
+                                            </select>
+                                            <span style="color:green" *ngIf="t.changeStatus" class="fa fa-exchange"
+                                                (click)="saveStatus(t)"></span>
+
+
+                                            <span style="color:green" *ngIf="t.edit" class="fa fa-check"
+                                                (click)="saveEdit(t)">&nbsp;&nbsp;</span>
+                                            <span style="color:red" *ngIf="t.edit" class="fa fa-level-up"
+                                                (click)="setEdit(t)"></span>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p *ngIf="doneTasks.length == 0;">No tasks available</p>
+                        </div>
+                        <!-- <div class="col-1"></div> -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center" style="justify-content: center;">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <button class="btn" (click)="setNewTask()">Add Task <i class="fa fa-level-down"></i></button>
+            <div class="box" *ngIf="newTask" style="text-align: center">
+
+                <i>Task: {{newTaskNumber}}</i><br>
+                <input type="text" id="title" placeholder="Title" [(ngModel)]="title"><br>
+                <textarea name="description" rows="2" style="width:80%;" placeholder="Description"
+                    [(ngModel)]="description"> </textarea><br>
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        User: &nbsp;
+                        <select name="user" [(ngModel)]="user">
+                            <option value="unassigned"><i>Unassigned</i></option>
+                            <option *ngFor="let u of allUsers" value={{u.username}}><i>{{
+                                    u.username }}</i></option>
+                        </select>
+                    </div>
+                    <br />
+                    <div class="col-12">
+                        Status: &nbsp;
+                        <select name="status" [(ngModel)]="status">
+                            <option value="to-do"><i>TO-DO</i></option>
+                            <option value="in_progress"><i>IN PROGRESS</i></option>
+                            <option value="done"><i>DONE</i></option>
+                        </select>
+                    </div>
+                    <br><br>
+
+                </div>
+                <button (click)="addNewTask()" class="btn btn-success">Save</button>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <hr />
+
+    <div class="row text-center">
+        <div class="col-4"></div>
+        <div class="col-4">
+            User: &nbsp;
+            <select class="mb-1" name="filterUser" [(ngModel)]="filterUser">
+                <option value="all"><i>All</i></option>
+                <option value="unassigned"><i>Unassigned</i></option>
+                <option *ngFor="let u of allUsers" value={{u.username}}><i>{{
+                        u.username }}</i></option>
+            </select>
+            <br />
+            Status: &nbsp;
+            <select name="filterStatus" [(ngModel)]="filterStatus">
+                <option value="all"><i>All</i></option>
+                <option value="to-do"><i>TO-DO</i></option>
+                <option value="in_progress"><i>IN PROGRESS</i></option>
+                <option value="done"><i>DONE</i></option>
+            </select>
+            <br />
+            Title: <input type="text" [(ngModel)]="filterTitle"> <br>
+            <button class="btn btn-success" (click)="filterTasks()">Filter</button>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
